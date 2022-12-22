@@ -17,4 +17,13 @@ public class Student {
     public String getStudentName() {
         return studentName;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Student{");
+        sb.append("studentId=").append(studentId);
+        sb.append(", studentName='").append(studentName).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }
