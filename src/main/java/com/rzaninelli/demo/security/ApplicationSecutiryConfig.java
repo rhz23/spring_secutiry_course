@@ -32,7 +32,7 @@ public class ApplicationSecutiryConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
+//                .csrf().disable()
                 .authorizeRequests()//autoriza requisições
                 .antMatchers("/", "index", "/css/*", "/js/*" ).permitAll()
                 .antMatchers("/api/**").hasRole(STUDENT.name()) //o caminho /api/** será acessivel somente pela Role Student
