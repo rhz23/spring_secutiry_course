@@ -47,20 +47,24 @@ public class ApplicationSecutiryConfig extends WebSecurityConfigurerAdapter {
                 .and()
 //                .httpBasic(); //usando a autenticação basica
                 .formLogin()
-                .loginPage("/login").permitAll()
-                .defaultSuccessUrl("/courses", true)
+                    .loginPage("/login")
+                    .permitAll()
+                    .defaultSuccessUrl("/courses", true)
+                    .passwordParameter("password") //se utilizar um nome diferente do padrão é necessário utilizar este método para definir o parametro -> deve ser igual ao nome do parametro no login.html
+                    .usernameParameter("username") //se utilizar um nome diferente do padrão é necessário utilizar este método para definir o parametro -> deve ser igual ao nome do parametro no login.html
                 .and()
                 .rememberMe() //default to 2 weeks
-                .tokenValiditySeconds((int)TimeUnit.DAYS.toSeconds(21))
-                .key("somethingverysecured")
+                    .tokenValiditySeconds((int)TimeUnit.DAYS.toSeconds(21))
+                    .key("somethingverysecured")
+                    .rememberMeParameter("remember-me") //se utilizar um nome diferente do padrão é necessário utilizar este método para definir o parametro -> deve ser igual ao nome do parametro no login.html
                 .and()
                 .logout()
-                .logoutUrl("/logout")
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET")) // não é necessário quando o csrf é desabilitado (quando o scrf esta habilitado o método HTTP para logout deve ser o POST
-                .clearAuthentication(true)
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID", "remember-me")
-                .logoutSuccessUrl("/login")
+                    .logoutUrl("/logout")
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET")) // não é necessário quando o csrf é desabilitado (quando o scrf esta habilitado o método HTTP para logout deve ser o POST
+                    .clearAuthentication(true)
+                    .invalidateHttpSession(true)
+                    .deleteCookies("JSESSIONID", "remember-me")
+                    .logoutSuccessUrl("/login")
         ;
     }
 
