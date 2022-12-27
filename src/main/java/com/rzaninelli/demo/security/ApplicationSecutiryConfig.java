@@ -14,6 +14,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import java.util.concurrent.TimeUnit;
 
 import static com.rzaninelli.demo.security.ApplicationUserPermission.*;
 import static com.rzaninelli.demo.security.ApplicationUserRole.*;
@@ -45,7 +48,20 @@ public class ApplicationSecutiryConfig extends WebSecurityConfigurerAdapter {
 //                .httpBasic(); //usando a autenticação basica
                 .formLogin()
                 .loginPage("/login").permitAll()
-                .defaultSuccessUrl("/courses", true);
+                .defaultSuccessUrl("/courses", true)
+                .and()
+                .rememberMe() //default to 2 weeks
+                .tokenValiditySeconds((int)TimeUnit.DAYS.toSeconds(21))
+                .key("somethingverysecured")
+                .and()
+                .logout()
+                .logoutUrl("/logout")
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET")) // não é necessário quando o csrf é desabilitado (quando o scrf esta habilitado o método HTTP para logout deve ser o POST
+                .clearAuthentication(true)
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID", "remember-me")
+                .logoutSuccessUrl("/login")
+        ;
     }
 
     @Override
