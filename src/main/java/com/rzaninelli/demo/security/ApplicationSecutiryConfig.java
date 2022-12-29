@@ -1,6 +1,7 @@
 package com.rzaninelli.demo.security;
 
 import com.rzaninelli.demo.auth.ApplicationUserService;
+import com.rzaninelli.demo.jwt.JwtUsernameAndPasswordAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -37,13 +39,21 @@ public class ApplicationSecutiryConfig extends WebSecurityConfigurerAdapter {
 //                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 //                .and()
                 .csrf().disable()
+                .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager()))
                 .authorizeRequests()//autoriza requisições
                 .antMatchers("/", "index", "/css/*", "/js/*" ).permitAll()
                 .antMatchers("/api/**").hasRole(STUDENT.name()) //o caminho /api/** será acessivel somente pela Role Student
                 .anyRequest()//todas as requisições precisam de autorização
                 .authenticated()//todas as requisições tem que vir com passoword e username
+
+        /*Retirado para utilizar authentication filters
+
                 .and()
 //                .httpBasic(); //usando a autenticação basica
+
                 .formLogin()
                     .loginPage("/login")
                     .permitAll()
@@ -63,6 +73,7 @@ public class ApplicationSecutiryConfig extends WebSecurityConfigurerAdapter {
                     .invalidateHttpSession(true)
                     .deleteCookies("JSESSIONID", "remember-me")
                     .logoutSuccessUrl("/login")
+                 */
         ;
     }
 
