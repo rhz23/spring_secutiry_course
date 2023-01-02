@@ -1,6 +1,7 @@
 package com.rzaninelli.demo.security;
 
 import com.rzaninelli.demo.auth.ApplicationUserService;
+import com.rzaninelli.demo.jwt.JwtTokenVerifier;
 import com.rzaninelli.demo.jwt.JwtUsernameAndPasswordAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -43,6 +44,7 @@ public class ApplicationSecutiryConfig extends WebSecurityConfigurerAdapter {
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager()))
+                .addFilterAfter(new JwtTokenVerifier(), JwtUsernameAndPasswordAuthenticationFilter.class)
                 .authorizeRequests()//autoriza requisições
                 .antMatchers("/", "index", "/css/*", "/js/*" ).permitAll()
                 .antMatchers("/api/**").hasRole(STUDENT.name()) //o caminho /api/** será acessivel somente pela Role Student
